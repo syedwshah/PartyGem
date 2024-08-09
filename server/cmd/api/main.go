@@ -5,7 +5,9 @@ import (
 	"net/http"
 )
 
+
 func main() {
+
     router := http.NewServeMux()
 
     // TODO: Set up routes and handlers

@@ -1,5 +1,5 @@
 run:
-    go run cmd/partygem/main.go
+    go run cmd/server/main.go
 
 test:
     go test ./...
