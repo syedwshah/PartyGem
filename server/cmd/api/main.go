@@ -34,8 +34,8 @@ func main() {
     authRepo := repositories.NewAuthRepository(db)
 
     // Initialize services
-    userService := &services.UserService{UserRepo: userRepo}
-    authService := &services.AuthService{AuthRepo: authRepo}
+    userService := services.NewUserService(userRepo)  // Returns UserService interface
+    authService := services.NewAuthService(authRepo)  // Returns AuthService interface
 
     // Initialize handlers
     userHandler := &handlers.UserHandler{UserService: userService}
