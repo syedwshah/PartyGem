@@ -19,7 +19,7 @@ func main() {
     if err := godotenv.Load(); err != nil {
         log.Fatalf("Error loading .env file")
     }
-
+    
     // Load configuration
     cfg := config.LoadConfig()
 
@@ -34,7 +34,7 @@ func main() {
     authRepo := repositories.NewAuthRepository(db)
 
     // Initialize services
-    userService := services.NewUserService(userRepo, cfg.JWTSecret)
+    userService := services.NewUserService(userRepo)
     authService := services.NewAuthService(authRepo, cfg.JWTSecret)
 
     // Initialize handlers
