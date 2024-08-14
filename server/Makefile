@@ -27,7 +27,12 @@ migration-create:
 
 # Target to apply migrations
 migrate-up:
-	migrate -path migrations -database "mysql://$(DB_USER):$(DB_PASSWORD)@tcp($(DB_HOST):$(DB_PORT))/$(DB_NAME)" -verbose up
+	@echo "DB_USER=$(DB_USER)"
+	@echo "DB_PASSWORD=$(DB_PASSWORD)"
+	@echo "DB_HOST=$(DB_HOST)"
+	@echo "DB_PORT=$(DB_PORT)"
+	@echo "DB_NAME=$(DB_NAME)"
+	@dotenv -f .env migrate -path migrations -database "mysql://$(DB_USER):$(DB_PASSWORD)@tcp($(DB_HOST):$(DB_PORT))/$(DB_NAME)" -verbose up
 
 # Target to revert migrations
 migrate-down:
