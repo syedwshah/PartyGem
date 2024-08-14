@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"time"
 
 	"github.com/syedwshah/PartyGem/server/pkg/models"
 	"github.com/syedwshah/PartyGem/server/pkg/repositories"
@@ -31,8 +32,23 @@ func (s *UserService) RegisterUser(user *models.User, password string) error {
 	}
 	user.PasswordHash = string(hashedPassword)
 
+	// Set created_at and updated_at
+	user.CreatedAt = time.Now()
+	user.UpdatedAt = time.Now()
+
 	// Save the user
-	return s.repo.CreateUser(user)
+	if err := s.repo.CreateUser(user); err != nil {
+		return err
+	}
+
+	// Ensure the user ID is set (if using MySQL's LAST_INSERT_ID())
+	savedUser, err := s.repo.FindByEmail(user.Email)
+	if err != nil {
+		return err
+	}
+	user.ID = savedUser.ID
+
+	return nil
 }
 
 // GetUserByID fetches a user by their ID.

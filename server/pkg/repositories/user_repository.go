@@ -15,10 +15,22 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 }
 
 func (r *UserRepository) CreateUser(user *models.User) error {
-	query := "INSERT INTO users (email, phone_number, password_hash, name) VALUES (?, ?, ?, ?)"
-	_, err := r.db.Exec(query, user.Email, user.PhoneNumber, user.PasswordHash, user.Name)
-	return err
+	query := `INSERT INTO users (email, phone_number, password_hash, name, created_at, updated_at)
+	          VALUES (?, ?, ?, ?, ?, ?)`
+	result, err := r.db.Exec(query, user.Email, user.PhoneNumber, user.PasswordHash, user.Name, user.CreatedAt, user.UpdatedAt)
+	if err != nil {
+		return err
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		return err
+	}
+	user.ID = int(id)
+
+	return nil
 }
+
 
 func (r *UserRepository) FindByID(id int) (*models.User, error) {
 	user := &models.User{}

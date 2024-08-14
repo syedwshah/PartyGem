@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -25,11 +26,13 @@ func (s *AuthService) LoginUser(email, password string) (string, error) {
 		return "", errors.New("invalid credentials")
 	}
 
+	// Compare the hashed password
 	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
 	if err != nil {
 		return "", errors.New("invalid credentials")
 	}
 
+	// Generate JWT token
 	token, err := s.generateToken(user.ID)
 	if err != nil {
 		return "", err
@@ -41,7 +44,7 @@ func (s *AuthService) LoginUser(email, password string) (string, error) {
 // generateToken generates a JWT token for the authenticated user.
 func (s *AuthService) generateToken(userID int) (string, error) {
 	claims := &jwt.StandardClaims{
-		Subject:   string(userID),
+		Subject:   strconv.Itoa(userID),  // Convert int to string correctly
 		ExpiresAt: time.Now().Add(24 * time.Hour).Unix(),
 	}
 
