@@ -4,10 +4,9 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/gin-gonic/gin"
 	"github.com/syedwshah/PartyGem/server/pkg/models"
 	"github.com/syedwshah/PartyGem/server/pkg/services"
-
-	"github.com/gin-gonic/gin"
 )
 
 type UserHandler struct {
@@ -19,18 +18,33 @@ func NewUserHandler(service *services.UserService) *UserHandler {
 }
 
 func (h *UserHandler) RegisterUser(c *gin.Context) {
-	var user models.User
-	if err := c.ShouldBindJSON(&user); err != nil {
+	var req struct {
+		Email       string `json:"email" binding:"required"`
+		PhoneNumber string `json:"phone_number" binding:"required"`
+		Password    string `json:"password" binding:"required"`
+		Name        string `json:"name"`
+	}
+
+	// Bind the JSON request body to the struct
+	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	password := c.PostForm("password")
-	if err := h.service.RegisterUser(&user, password); err != nil {
+	// Create a user model from the request data
+	user := models.User{
+		Email:       req.Email,
+		PhoneNumber: req.PhoneNumber,
+		Name:        req.Name,
+	}
+
+	// Call the service to register the user
+	if err := h.service.RegisterUser(&user, req.Password); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
+	// Respond with the created user
 	c.JSON(http.StatusCreated, user)
 }
 

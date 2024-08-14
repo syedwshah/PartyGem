@@ -2,6 +2,8 @@ package services
 
 import (
 	"errors"
+	"log"
+	"strings"
 	"time"
 
 	"github.com/syedwshah/PartyGem/server/pkg/models"
@@ -17,39 +19,48 @@ func NewUserService(repo *repositories.UserRepository) *UserService {
 	return &UserService{repo: repo}
 }
 
-// RegisterUser registers a new user in the system.
+
 func (s *UserService) RegisterUser(user *models.User, password string) error {
-	// Check if user already exists
-	existingUser, _ := s.repo.FindByEmail(user.Email)
-	if existingUser != nil {
-		return errors.New("user already exists")
-	}
+    // Trim any leading or trailing spaces from the password
+    password = strings.TrimSpace(password)
 
-	// Hash the password
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	if err != nil {
-		return err
-	}
-	user.PasswordHash = string(hashedPassword)
+    // Debugging: Print the password and its length
+    log.Printf("Password: '%s', Length: %d", password, len(password))
 
-	// Set created_at and updated_at
-	user.CreatedAt = time.Now()
-	user.UpdatedAt = time.Now()
+    // Enforce minimum password length
+    const minPasswordLength = 8
+    if len(password) < minPasswordLength {
+        log.Printf("Password is too short: %d characters", len(password))
+        return errors.New("password must be at least 8 characters long")
+    }
 
-	// Save the user
-	if err := s.repo.CreateUser(user); err != nil {
-		return err
-	}
+    // Proceed with the rest of the registration logic...
+    existingUser, _ := s.repo.FindByEmail(user.Email)
+    if existingUser != nil {
+        return errors.New("user already exists")
+    }
 
-	// Ensure the user ID is set (if using MySQL's LAST_INSERT_ID())
-	savedUser, err := s.repo.FindByEmail(user.Email)
-	if err != nil {
-		return err
-	}
-	user.ID = savedUser.ID
+    hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+    if err != nil {
+        return err
+    }
+    user.PasswordHash = string(hashedPassword)
+    user.CreatedAt = time.Now()
+    user.UpdatedAt = time.Now()
 
-	return nil
+    if err := s.repo.CreateUser(user); err != nil {
+        return err
+    }
+
+    savedUser, err := s.repo.FindByEmail(user.Email)
+    if err != nil {
+        return err
+    }
+    user.ID = savedUser.ID
+
+    return nil
 }
+
 
 // GetUserByID fetches a user by their ID.
 func (s *UserService) GetUserByID(id int) (*models.User, error) {
