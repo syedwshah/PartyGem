@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -57,6 +58,10 @@ func main() {
 func setupRouter(userHandler *handlers.UserHandler, authHandler *handlers.AuthHandler) *gin.Engine {
     r := gin.Default()
 
+    r.GET("/", func(c *gin.Context) {
+        c.JSON(http.StatusOK, gin.H{"message": "Welcome to PartyGem API!"})
+    })
+
     // Set up routes
     r.POST("/register", userHandler.RegisterUser)
     r.POST("/login", authHandler.LoginUser)
@@ -68,3 +73,4 @@ func setupRouter(userHandler *handlers.UserHandler, authHandler *handlers.AuthHa
 
     return r
 }
+
