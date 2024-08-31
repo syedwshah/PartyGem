@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import EventForm from './components/EventForm';
 
@@ -13,8 +13,8 @@ const App = ({ events }) => {
     setShowForm(false);
   };
 
-  const handleFormSubmit = (eventDetails) => {
-    setEvents([...events, eventDetails]);
+  const handleFormSubmit = () => {
+    //setEvents([...events, eventDetails]);
     setShowForm(false);
   };
 

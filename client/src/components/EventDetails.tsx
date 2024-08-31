@@ -1,9 +1,9 @@
-import React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const EventDetails = ({ events }) => {
-  const { id } = useParams();
-  const event = events.find(event => event.id === parseInt(id, 10));
+  //query backend for event details
+  // const { id } = useParams();
+  const event = events[0] ?? 1
 
   if (!event) {
     return <div>Event not found</div>;
