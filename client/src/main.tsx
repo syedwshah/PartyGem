@@ -6,6 +6,8 @@ import EventDetails from './components/EventDetails';
 import ErrorPage from './error-page.tsx';
 import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext.tsx';
+import { EventProvider } from './contexts/EventContext.tsx';
 
 const events = [
   { id: 1, title: 'Birthday Party', date: '2024-09-15', location: 'House', description: 'Birthday Party', tags: ['fun', '20s', 'bday', 'summer'] },
@@ -26,13 +28,17 @@ const router = createBrowserRouter([
   },
   {
     path: '/event/:id',
-    element: <EventDetails events={events} />,
+    element: <EventDetails />,
     errorElement: <ErrorPage />,
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <EventProvider initialEvents={events}>
+        <RouterProvider router={router} />
+      </EventProvider>
+    </AuthProvider>
   </React.StrictMode>
 );

@@ -1,9 +1,13 @@
 import { Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { useEvent } from '../contexts/EventContext';
 
-const EventDetails = ({ events }) => {
+const EventDetails = () => {
   //query backend for event details
   // const { id } = useParams();
-  const event = events[0] ?? 1
+  const { id } = useParams();
+  const { events } = useEvent();
+  const event = events.find(e => e.id === parseInt(id, 10));
 
   if (!event) {
     return <div>Event not found</div>;
