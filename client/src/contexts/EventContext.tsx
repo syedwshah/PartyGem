@@ -1,14 +1,14 @@
 // EventContext.tsx
-import React, { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 
-const EventContext = createContext(null);
+const EventContext = createContext<any>(null);
 
 export const useEvent = () => useContext(EventContext);
 
 export const EventProvider = ({ children, initialEvents }) => {
   const [events, setEvents] = useState(initialEvents);
 
-  const addEvent = (newEvent) => setEvents([...events, newEvent]);
+  const addEvent = (newEvent) => setEvents((prevState) => [...prevState, newEvent]);
   const removeEvent = (eventId) =>
     setEvents(events.filter(event => event.id !== eventId));
 

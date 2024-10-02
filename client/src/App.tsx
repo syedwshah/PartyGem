@@ -33,7 +33,7 @@ const App = ({ events }) => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {events.map((event) => (
-          <Link key={event.id} to={`/event/${event.id}`}>
+          <Link key={event.id} to={`/events/${event.id}`}>
             <div className="bg-white shadow-lg rounded-lg p-4">
               <h2 className="text-xl font-semibold text-purpleScheme">{event.title}</h2>
               <p className="text-gray-600">{event.date}</p>

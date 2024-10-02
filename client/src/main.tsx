@@ -4,9 +4,10 @@ import App from './App.tsx';
 import LoginPage from './pages/LoginPage';
 import EventDetails from './components/EventDetails';
 import ErrorPage from './error-page.tsx';
+import RegisterPage from './pages/RegisterPage';
 import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext.tsx';
+import { UserProvider } from './contexts/UserContext.tsx';
 import { EventProvider } from './contexts/EventContext.tsx';
 
 const events = [
@@ -22,12 +23,17 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
+    path: '/register',
+    element: <RegisterPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
     path: '/home',
     element: <App events={events} />,
     errorElement: <ErrorPage />,
   },
   {
-    path: '/event/:id',
+    path: '/events/:id',
     element: <EventDetails />,
     errorElement: <ErrorPage />,
   },
@@ -35,10 +41,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <AuthProvider>
+    <UserProvider>
       <EventProvider initialEvents={events}>
         <RouterProvider router={router} />
       </EventProvider>
-    </AuthProvider>
+    </UserProvider>
   </React.StrictMode>
 );

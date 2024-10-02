@@ -8,6 +8,7 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
+    // pass is bearer token
     if (email === 'user@gmail.com' && password === 'pass') {
       navigate('/home');
     } else {
